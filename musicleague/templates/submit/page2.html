@@ -165,6 +165,8 @@
 
                 if (uri in this.tracks)
                     return 'found';
+                else if (uri.length > 0)
+                    return 'error not-found';
             },
             determineSongMessage: function(uri) {
                 if (this.duplicateTrack.includes(uri))
