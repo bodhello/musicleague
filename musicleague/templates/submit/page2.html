@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="container">
-            <div v-for="(submission, index) in submissions" v-bind:key="index" class="song row" v-bind:class="{ found: submission.spotifyUri in tracks }">
+            <div v-for="(submission, index) in submissions" v-bind:key="index" class="song row" v-bind:class="determineSongClass(submission.spotifyUri)">
                 <div class="col-xs-12">
                     <span class="song-header">Song [[ index + 1 ]]</span>
                 </div>
@@ -106,31 +106,42 @@
                 });
         },
         methods: {
-          onSubmit: function() {
-              console.log(`Submitting ${JSON.stringify(this.submissions)}`);
-              axios
-                  .put('https://{{ api_domain }}/v1/leagues/{{ league.id }}/rounds/{{ round.id }}/submissions/{{ user.id }}', {submissions: this.submissions}, {headers: {'Authorization': `Bearer ${accessToken}`}})
-                  .then((response) => {
-                      console.log(response);
-                  }).catch((error) => {
-                      if (error.response && error.response.status === 409) {
-                          if (error.response.data.duplicateAlbum) {
-                              this.duplicateAlbum = error.response.data.duplicateAlbum;
-                              console.warn(`Duplicate album for ${this.duplicateAlbum}`);
-                          }
-                          if (error.response.data.duplicateArtist) {
-                              this.duplicateAlbum = error.response.data.duplicateArtist;
-                              console.warn(`Duplicate artist for ${this.duplicateArtist}`);
-                          }
-                          if (error.response.data.duplicateTrack) {
-                              this.duplicateTrack = error.response.data.duplicateTrack;
-                              console.warn(`Duplicate track for ${this.duplicateTrack}`);
-                          }
-                      }
+            onSubmit: function() {
+                console.log(`Submitting ${JSON.stringify(this.submissions)}`);
+                axios
+                    .put('https://{{ api_domain }}/v1/leagues/{{ league.id }}/rounds/{{ round.id }}/submissions/{{ user.id }}', {submissions: this.submissions}, {headers: {'Authorization': `Bearer ${accessToken}`}})
+                    .then((response) => {
+                        console.log(response);
+                    }).catch((error) => {
+                        if (error.response && error.response.status === 409) {
+                            if (error.response.data.duplicateAlbum) {
+                                this.duplicateAlbum = error.response.data.duplicateAlbum;
+                                console.warn(`Duplicate album for ${this.duplicateAlbum}`);
+                            }
+                            if (error.response.data.duplicateArtist) {
+                                this.duplicateAlbum = error.response.data.duplicateArtist;
+                                console.warn(`Duplicate artist for ${this.duplicateArtist}`);
+                            }
+                            if (error.response.data.duplicateTrack) {
+                                this.duplicateTrack = error.response.data.duplicateTrack;
+                                console.warn(`Duplicate track for ${this.duplicateTrack}`);
+                            }
+                        }
 
-                      console.error(error);
-                  });
-          }
+                        console.error(error);
+                    });
+            },
+            determineSongClass: function(uri) {
+                if (this.duplicateTrack.includes(uri))
+                    return 'duplicate-song';
+                else if (this.duplicateAlbum.includes(uri))
+                    return 'duplicate-album';
+                else if (this.duplicateArtist.includes(uri))
+                    return 'duplicate-artist';
+
+                if (uri in this.tracks)
+                    return 'found';
+            }
         },
         watch: {
             submissions: {
