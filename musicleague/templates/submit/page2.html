@@ -112,7 +112,7 @@
                 if (this.preventSubmit)
                     return false;
 
-                return expectedNumSubmissions === Object.keys(tracks).length;
+                return this.expectedNumSubmissions === Object.keys(this.tracks).length;
             },
             onSubmit: function() {
                 console.log(`Submitting ${JSON.stringify(this.submissions)}`);
@@ -127,6 +127,12 @@
                         console.log(response);
                     }).catch((error) => {
                         if (error.response && error.response.status === 409) {
+                            this.forceSubmit = false;
+                            this.preventSubmit = false;
+                            this.duplicateArtist = [];
+                            this.duplicateAlbum = [];
+                            this.duplicateTrack = [];
+
                             if (error.response.data.duplicateAlbum) {
                                 this.forceSubmit = true;
                                 this.duplicateAlbum = error.response.data.duplicateAlbum;
