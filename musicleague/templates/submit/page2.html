@@ -45,7 +45,7 @@
                 <div class="song-info" v-if="submission.spotifyUri in tracks">
                     <div class="col-xs-12">
                         <span class="you-selected">You Selected:</span>
-                        <span class="message"></span>
+                        <span class="message">{{ determineSongMessage(submission.spotifyUri) }}</span>
                     </div>
                     <div class="col-xs-12">
                         <img v-bind:src="tracks[submission.spotifyUri].album.images[1].url" alt="" class="img">
@@ -141,6 +141,16 @@
 
                 if (uri in this.tracks)
                     return 'found';
+            },
+            determineSongMessage: function(uri) {
+                if (this.duplicateTrack.includes(uri))
+                    return 'Someone else has already submitted this song. Try again!';
+                else if (this.duplicateAlbum.includes(uri))
+                    return 'Someone else has already submitted a song from this album. Proceed at your own risk!';
+                else if (this.duplicateTrack.includes(uri))
+                    return 'Someone else has already submitted a song from this artist. Proceed at your own risk!';
+
+                return '';
             }
         },
         watch: {
