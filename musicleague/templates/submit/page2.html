@@ -119,7 +119,7 @@
                                 console.warn(`Duplicate album for ${this.duplicateAlbum}`);
                             }
                             if (error.response.data.duplicateArtist) {
-                                this.duplicateAlbum = error.response.data.duplicateArtist;
+                                this.duplicateArtist = error.response.data.duplicateArtist;
                                 console.warn(`Duplicate artist for ${this.duplicateArtist}`);
                             }
                             if (error.response.data.duplicateTrack) {
