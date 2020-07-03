@@ -45,7 +45,7 @@
                 <div class="song-info" v-if="submission.spotifyUri in tracks">
                     <div class="col-xs-12">
                         <span class="you-selected">You Selected:</span>
-                        <span class="message">[[ determineSongMessage(submission.spotifyUri) ]]</span>
+                        <span class="message" v-html="determineSongMessage(submission.spotifyUri)"></span>
                     </div>
                     <div class="col-xs-12">
                         <img v-bind:src="tracks[submission.spotifyUri].album.images[1].url" alt="" class="img">
