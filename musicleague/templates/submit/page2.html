@@ -170,9 +170,9 @@
                 if (this.duplicateTrack.includes(uri))
                     return 'Someone else has already submitted this song. Try again!';
                 else if (this.duplicateAlbum.includes(uri))
-                    return 'Someone else has already submitted a song from this album. Proceed at your own risk!';
+                    return 'Someone else has already submitted a song from this album. Still want to go through with it? Click "submit" again, but proceed at your own risk!';
                 else if (this.duplicateArtist.includes(uri))
-                    return 'Someone else has already submitted a song from this artist. Proceed at your own risk!';
+                    return 'Someone else has already submitted a song from this artist. Still want to go through with it? Click "submit" again, but proceed at your own risk!';
 
                 return '';
             }
