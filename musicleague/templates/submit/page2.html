@@ -133,11 +133,11 @@
             },
             determineSongClass: function(uri) {
                 if (this.duplicateTrack.includes(uri))
-                    return 'duplicate-song';
+                    return 'error duplicate-song';
                 else if (this.duplicateAlbum.includes(uri))
-                    return 'duplicate-album';
+                    return 'warning duplicate-album';
                 else if (this.duplicateArtist.includes(uri))
-                    return 'duplicate-artist';
+                    return 'warning duplicate-artist';
 
                 if (uri in this.tracks)
                     return 'found';
