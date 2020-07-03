@@ -107,13 +107,15 @@
                     console.log(error);
                 });
         },
-        methods: {
+        computed: {
             canSubmit: function() {
                 if (this.preventSubmit)
                     return false;
 
                 return this.expectedNumSubmissions === Object.keys(this.tracks).length;
-            },
+            }
+        },
+        methods: {
             onSubmit: function() {
                 console.log(`Submitting ${JSON.stringify(this.submissions)}`);
 
