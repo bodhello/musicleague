@@ -80,6 +80,9 @@
     new Vue({
         el: '#app',
         data: {
+            duplicateArtist: [],
+            duplicateAlbum: [],
+            duplicateTrack: [],
             expectedNumSubmissions: expectedNumSubmissions,
             submissions: [],
             tracks: {}
@@ -110,6 +113,21 @@
                   .then((response) => {
                       console.log(response);
                   }).catch((error) => {
+                      if (error.response && error.response.status === 409) {
+                          if (error.response.data.duplicateAlbum) {
+                              this.duplicateAlbum = error.response.data.duplicateAlbum;
+                              console.warn(`Duplicate album for ${this.duplicateAlbum}`);
+                          }
+                          if (error.response.data.duplicateArtist) {
+                              this.duplicateAlbum = error.response.data.duplicateArtist;
+                              console.warn(`Duplicate artist for ${this.duplicateArtist}`);
+                          }
+                          if (error.response.data.duplicateTrack) {
+                              this.duplicateTrack = error.response.data.duplicateTrack;
+                              console.warn(`Duplicate track for ${this.duplicateTrack}`);
+                          }
+                      }
+
                       console.error(error);
                   });
           }
