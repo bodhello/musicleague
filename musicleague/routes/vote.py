@@ -35,6 +35,10 @@ def view_vote(league_id, submission_period_id):
     if not league.has_user(g.user):
         return redirect(url_for('view_league', league_id=league.id))
 
+    if (league.current_submission_period is None or
+            league.current_submission_period.id != submission_period_id):
+        return redirect(url_for('view_league', league_id=league.id))
+
     if not submission_period.accepting_votes:
         return redirect(url_for('view_league', league_id=league.id))
 
@@ -89,6 +93,15 @@ def vote(league_id, submission_period_id):
         if not league.has_user(g.user):
             return "Not a member of this league", httplib.UNAUTHORIZED
 
+        # If this is not the current round, redirect
+        if (league.current_submission_period is None or
+                league.current_submission_period.id != submission_period_id):
+            return redirect(request.referrer)
+
+        # If this round is no longer accepting votes, redirect
+        if not submission_period.accepting_votes:
+            return redirect(request.referrer)
+
         # If this user didn't submit for this round, don't allow them to vote
         if not get_my_submission(g.user, submission_period):
             return redirect(url_for('view_league', league_id=league_id))
@@ -96,10 +109,6 @@ def vote(league_id, submission_period_id):
         # If this user already voted for this round, don't allow them to vote
         if get_my_vote(g.user, submission_period):
             return redirect(url_for('view_league', league_id=league_id))
-
-        # If this round is no longer accepting votes, redirect
-        if not submission_period.accepting_votes:
-            return redirect(request.referrer)
 
         try:
             votes = json.loads(request.form.get('votes'))

@@ -66,6 +66,11 @@ def view_submit(league_id, submission_period_id):
     if not league.has_user(g.user):
         return redirect(url_for('view_league', league_id=league.id))
 
+    # Only allow submissions for the current round
+    if (league.current_submission_period is None or
+            league.current_submission_period.id != submission_period_id):
+        return redirect(url_for('view_league', league_id=league.id))
+
     if not submission_period.accepting_submissions:
         return redirect(url_for('view_league', league_id=league.id))
 
@@ -92,6 +97,10 @@ def submit(league_id, submission_period_id):
 
         if not league.has_user(g.user):
             return "Not a member of this league", httplib.UNAUTHORIZED
+
+        if (league.current_submission_period is None or
+                league.current_submission_period.id != submission_period_id):
+            return redirect(request.referrer)
 
         if not submission_period.accepting_submissions:
             return redirect(request.referrer)
