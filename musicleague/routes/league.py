@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timedelta
 import httplib
 import json
+from os import getenv
 from pytz import utc
 import requests
 
@@ -62,15 +63,27 @@ def get_create_league_v2():
 @login_required
 def post_create_league_v2():
     auth_headers = {'Authorization': 'Bearer ' + g.access_token}
+    api_domain = getenv('API_DOMAIN')
 
     name = request.form.get('league-name')
-    r = requests.post('https://api.musicleague.app/v1/leagues',
-        data=json.dumps({'name': name}),
-        headers=auth_headers)
-
+    r = requests.post('https://{}/v1/leagues'.format(api_domain),
+                      headers=auth_headers, data=json.dumps({'name': name}))
     app.logger.info('Successful post to API server', extra={'resp': r.json()})
 
     league_id = r.json()['id']
+
+    preferences = {
+        'numTracks': int(request.form.get('tracks-submitted')),
+        'upvoteBankSize': int(request.form.get('point-bank-size')),
+        'maxUpvotesPerSong': int(request.form.get('max-points-per-song') or 0),
+        'downvoteBankSize': int(request.form.get('downvote-bank-size') or 0),
+        'maxDownvotesPerSong': int(request.form.get('max-downvotes-per-song') or 0),
+        'submissionReminderDelta': 24,
+        'voteReminderDelta': 24,
+    }
+    r = requests.put('https://{}/v1/leagues/{}/preferences'.format(api_domain, league_id),
+                     headers=auth_headers, data=json.dumps(preferences))
+    app.logger.info('Successful put to API server', extra={'resp': r.json()})
 
     rounds = json.loads(request.form.get('added-rounds', []))
     for new_round in rounds:
@@ -82,12 +95,11 @@ def post_create_league_v2():
         vote_due_date = utc.localize(
             datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
 
-        r = requests.post('https://api.musicleague.app/v1/leagues/' + league_id + '/rounds',
-            data=json.dumps(
-                {'name': new_round['name'], 'description': new_round['description'],
-                 'submissionsDue': submission_due_date.isoformat(), 'votesDue': vote_due_date.isoformat()}),
-            headers=auth_headers)
-
+        r = requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
+                          headers=auth_headers,
+                          data=json.dumps(
+                              {'name': new_round['name'], 'description': new_round['description'],
+                               'submissionsDue': submission_due_date.isoformat(), 'votesDue': vote_due_date.isoformat()}))
         app.logger.info('Successful post to API server', extra={'resp': r.json()})
 
     return league_id, httplib.OK
