@@ -73,6 +73,7 @@ def post_create_league_v2():
     league_id = r.json()['id']
 
     preferences = {
+        'id': league_id,
         'trackCount': int(request.form.get('tracks-submitted')),
         'numTracks': int(request.form.get('tracks-submitted')),
         'upvoteBankSize': int(request.form.get('point-bank-size')),
