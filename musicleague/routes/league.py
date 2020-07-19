@@ -168,12 +168,20 @@ def post_create_league():
 def get_manage_league(league_id):
     league = select_league(league_id)
     if not league or not league.has_owner(g.user):
-        app.logger.warning('Unauthorized user attempted access',
-                           extra={'league': league.id, 'user': g.user.id})
+        app.logger.warning('Unauthorized user attempted access', extra={'league': league.id, 'user': g.user.id})
         return redirect(url_for('view_league', league_id=league_id))
+    return {'user': g.user, 'league': league}
 
-    return {'user': g.user,
-            'league': league}
+
+@app.route(MANAGE_LEAGUE_URL_V2, methods=['GET'])
+@templated('league/manage/page.html')
+@login_required
+def get_manage_league_v2(league_id):
+    league = select_league(league_id)
+    if not league or not league.has_owner(g.user):
+        app.logger.warning('Unauthorized user attempted access', extra={'league': league.id, 'user': g.user.id})
+        return redirect(url_for('view_league', league_id=league_id))
+    return {'user': g.user, 'league': league}
 
 
 @app.route(MANAGE_LEAGUE_URL_V2, methods=['POST'])
