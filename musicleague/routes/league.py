@@ -76,12 +76,11 @@ def post_create_league_v2():
                  headers=auth_headers,
                  data=json.dumps({
                      'id': league_id,
-                     'trackCount': int(request.form.get('tracks-submitted')),
-                     'numTracks': int(request.form.get('tracks-submitted')),
-                     'upvoteBankSize': int(request.form.get('point-bank-size')),
-                     'maxUpvotesPerSong': int(request.form.get('max-points-per-song') or 0),
-                     'downvoteBankSize': int(request.form.get('downvote-bank-size') or 0),
-                     'maxDownvotesPerSong': int(request.form.get('max-downvotes-per-song') or 0),
+                     'trackCount': request.form.get('tracks-submitted', default=0, type=int),
+                     'upvoteBankSize': request.form.get('point-bank-size', default=0, type=int),
+                     'maxUpvotesPerSong': request.form.get('max-points-per-song', default=0, type=int),
+                     'downvoteBankSize': request.form.get('downvote-bank-size', default=0, type=int),
+                     'maxDownvotesPerSong': request.form.get('max-downvotes-per-song', default=0, type=int),
                      'submissionReminderDelta': 24,
                      'voteReminderDelta': 24}))
 
@@ -100,6 +99,10 @@ def post_create_league_v2():
                               'description': new_round['description'],
                               'submissionsDue': submission_due_date.isoformat(),
                               'votesDue': vote_due_date.isoformat()}))
+
+    user_ids = json.loads(request.form.get('added-members', '[]'))
+    for user_id in user_ids:
+        requests.put('https://{}/v1/leagues/{}/members/{}'.format(api_domain, league_id, user_id), headers=auth_headers)
 
     return league_id, httplib.OK
 
