@@ -101,7 +101,7 @@ def post_create_league_v2():
                               'votesDue': vote_due_date.isoformat()}))
 
     user_ids = json.loads(request.form.get('added-members', '[]'))
-    for user_id in user_ids + [g.user.id]:
+    for user_id in [g.user.id] + user_ids:
         requests.put('https://{}/v1/leagues/{}/members/{}'.format(api_domain, league_id, user_id), headers=auth_headers)
 
     return redirect(url_for('view_league', league_id=league_id))
