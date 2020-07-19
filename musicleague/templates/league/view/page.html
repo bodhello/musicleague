@@ -324,12 +324,16 @@
     {% endif %}
     {% include "league/view/_round.html" %}
 {% endfor %}
+<div id="app"></div>
 
 {% endblock %}
 
 {% block js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
 <script type="text/javascript">
+    let accessToken = "{{ access_token }}";
+    let apiDomain = "{{ api_domain }}";
+    let leagueId = "{{ league.id }}";
     $(document).ready(function() {
         $('.visible-xs .members-toggle').popover({
             placement: 'bottom',
@@ -382,6 +386,27 @@
             setTooltip(e.trigger, 'Failed!');
             hideTooltip(e.trigger);
         });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            rounds: [],
+            submissions: {}
+        },
+        delimiters: ['[[', ']]'],
+        mounted () {
+            axios
+                .get(`https://${apiDomain}/v1/leagues/${leagueId}/rounds`, {headers: {'Authorization': `Bearer ${accessToken}`}})
+                .then((response) => {
+                    console.log(response.data);
+                }).catch((error) => {
+                    console.error(error);
+                });
+        }
     });
 </script>
 {% endblock %}

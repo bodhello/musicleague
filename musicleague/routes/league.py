@@ -357,7 +357,10 @@ def view_league(league_id):
         'league/view/page.html',
         user=g.user, league=league,
         next_submission_due_date=next_submission_due_date,
-        next_vote_due_date=next_vote_due_date)
+        next_vote_due_date=next_vote_due_date,
+        api_domain=getenv('API_DOMAIN'),
+        access_token=g.access_token,
+    )
 
 
 @app.route(VIEW_LEAGUE_URL + 'score/')
