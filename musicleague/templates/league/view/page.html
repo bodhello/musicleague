@@ -328,6 +328,10 @@
     <div v-for="(round, index) in rounds" class="round-bar" v-bind:class="{complete: round.status === 20}">
         <div class="container">
             <div class="row">
+                <div class="col-xs-12 col-sm-2 text-center vcenter">
+                    <span class="round-status-icon" v-bind:class="{complete: round.status === 20}"></span>
+                    <div class="visibile-xs" style="padding: 10px 0"></div>
+                </div>
                 <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title" v-bind:class="{complete: round.status === 20}">[[ round.name ]]</a>
                 <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
             </div>
