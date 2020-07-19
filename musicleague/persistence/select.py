@@ -132,8 +132,8 @@ def select_league(league_id, exclude_properties=None):
             if cur.rowcount < 1:
                 return None
 
-            created, name, owner_id, status = cur.fetchone()
-            league = League(id=league_id, created=created, name=name, owner_id=owner_id, status=status)
+            created, name, owner_id, status, version = cur.fetchone()
+            league = League(id=league_id, created=created, name=name, owner_id=owner_id, status=status, version=version)
             league.preferences = select_league_preferences(league_id)
 
             user_idx = {}
