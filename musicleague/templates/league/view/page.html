@@ -331,9 +331,18 @@
                 <div class="col-xs-12 col-sm-2 text-center vcenter">
                     <span class="round-status-icon" v-bind:class="{complete: round.status === 20}"></span>
                     <div class="visibile-xs" style="padding: 10px 0"></div>
+                </div><div class="col-xs-12 col-sm-5 vcenter">
+                    <div class="row">
+                        <div class="text-center-xs">
+                            <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title" v-bind:class="{complete: round.status === 20}">[[ round.name ]]</a>
+                            <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
+                            <div class="visible-xs" style="padding: 5px 0"></div>
+                        </div><div class="text-center-xs">
+                            <span v-if="round.status === 20" class="status-text complete">[[ moment(round.votesDue).calendar(null, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'}) ]]</span>
+                            <span v-else class="status-text">[[ moment(rounds[index-1].votesDue).calendar(null, {sameDay: '[Live today at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'}) ]]</span>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title" v-bind:class="{complete: round.status === 20}">[[ round.name ]]</a>
-                <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
             </div>
         </div>
     </div>
