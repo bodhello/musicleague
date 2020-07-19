@@ -338,8 +338,8 @@
                             <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
                             <div class="visible-xs" style="padding: 5px 0"></div>
                         </div><div class="text-center-xs">
-                            <span v-if="round.status === 20" class="status-text complete">[[ moment(round.votesDue).calendar(null, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'}) ]]</span>
-                            <span v-else class="status-text">[[ moment(rounds[index-1].votesDue).calendar(null, {sameDay: '[Live today at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'}) ]]</span>
+                            <span v-if="round.status === 20" class="status-text complete">[[ getTimestamp(round.votesDue, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'}) ]]</span>
+                            <span v-else class="status-text">[[ getTimestamp(rounds[index-1].votesDue, {sameDay: '[Live today at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'}) ]]</span>
                         </div>
                     </div>
                 </div>
@@ -429,6 +429,11 @@
                 }).catch((error) => {
                     console.error(error);
                 });
+        },
+        methods: {
+            getTimestamp: function(ts, cal) {
+                return moment(ts).calendar(null, cal);
+            }
         }
     });
 </script>
