@@ -192,7 +192,7 @@ DELETE_LEAGUE = "DELETE FROM leagues WHERE id = %s;"
 
 INSERT_LEAGUE = "INSERT INTO leagues (id, created, name, owner_id, status) VALUES (%s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING;"
 
-SELECT_LEAGUE = "SELECT created, name, owner_id, status FROM leagues WHERE id = %s;"
+SELECT_LEAGUE = "SELECT created, name, owner_id, status, version FROM leagues WHERE id = %s;"
 
 SELECT_LEAGUES_COUNT = "SELECT COUNT(id) FROM leagues;"
 

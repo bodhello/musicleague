@@ -170,6 +170,9 @@ def post_create_league():
 @login_required
 def get_manage_league(league_id):
     league = select_league(league_id)
+    if league.version == 2:
+        return redirect(url_for('get_manage_league_v2', league_id=league_id))
+
     if not league or not league.has_owner(g.user):
         app.logger.warning('Unauthorized user attempted access', extra={'league': league.id, 'user': g.user.id})
         return redirect(url_for('view_league', league_id=league_id))

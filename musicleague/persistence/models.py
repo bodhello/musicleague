@@ -216,7 +216,7 @@ class LeagueStatus:
 
 
 class League:
-    def __init__(self, id, created, name, owner_id, status):
+    def __init__(self, id, created, name, owner_id, status, version=1):
         self.id = id
         self.created = created
         self.invited_users = []
@@ -229,6 +229,7 @@ class League:
         self.status = status
         self.submission_periods = []
         self.users = []
+        self.version = version
 
     @property
     def current_submission_period(self):
