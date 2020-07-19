@@ -37,10 +37,11 @@ from musicleague.submission_period import update_submission_period
 from musicleague.user import get_user
 
 CREATE_LEAGUE_URL = '/l/create/'
-CREATE_LEAGUE_URL_V2 = '/l/create/v2/'
+CREATE_LEAGUE_URL_V2 = '/l/create/2/'
 JOIN_LEAGUE_URL = '/l/<league_id>/join/'
 LEADERBOARD_URL = '/l/<league_id>/leaderboard/'
 MANAGE_LEAGUE_URL = '/l/<league_id>/manage/'
+MANAGE_LEAGUE_URL_V2 = '/l/<league_id>/manage/2/'
 REMOVE_LEAGUE_URL = '/l/<league_id>/remove/'
 VIEW_LEAGUE_URL = '/l/<league_id>/'
 
@@ -68,41 +69,37 @@ def post_create_league_v2():
     name = request.form.get('league-name')
     r = requests.post('https://{}/v1/leagues'.format(api_domain),
                       headers=auth_headers, data=json.dumps({'name': name}))
-    app.logger.info('Successful post to API server', extra={'resp': r.json()})
 
     league_id = r.json()['id']
 
-    preferences = {
-        'id': league_id,
-        'trackCount': int(request.form.get('tracks-submitted')),
-        'numTracks': int(request.form.get('tracks-submitted')),
-        'upvoteBankSize': int(request.form.get('point-bank-size')),
-        'maxUpvotesPerSong': int(request.form.get('max-points-per-song') or 0),
-        'downvoteBankSize': int(request.form.get('downvote-bank-size') or 0),
-        'maxDownvotesPerSong': int(request.form.get('max-downvotes-per-song') or 0),
-        'submissionReminderDelta': 24,
-        'voteReminderDelta': 24,
-    }
-    r = requests.put('https://{}/v1/leagues/{}/preferences'.format(api_domain, league_id),
-                     headers=auth_headers, data=json.dumps(preferences))
-    app.logger.info('Successful put to API server', extra={'resp': r.json()})
+    requests.put('https://{}/v1/leagues/{}/preferences'.format(api_domain, league_id),
+                 headers=auth_headers,
+                 data=json.dumps({
+                     'id': league_id,
+                     'trackCount': int(request.form.get('tracks-submitted')),
+                     'numTracks': int(request.form.get('tracks-submitted')),
+                     'upvoteBankSize': int(request.form.get('point-bank-size')),
+                     'maxUpvotesPerSong': int(request.form.get('max-points-per-song') or 0),
+                     'downvoteBankSize': int(request.form.get('downvote-bank-size') or 0),
+                     'maxDownvotesPerSong': int(request.form.get('max-downvotes-per-song') or 0),
+                     'submissionReminderDelta': 24,
+                     'voteReminderDelta': 24}))
 
     rounds = json.loads(request.form.get('added-rounds', []))
     for new_round in rounds:
         submission_due_date_str = new_round['submission-due-date-utc']
-        submission_due_date = utc.localize(
-            datetime.strptime(submission_due_date_str, '%m/%d/%y %I%p'))
+        submission_due_date = utc.localize(datetime.strptime(submission_due_date_str, '%m/%d/%y %I%p'))
 
         vote_due_date_str = new_round['voting-due-date-utc']
-        vote_due_date = utc.localize(
-            datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
+        vote_due_date = utc.localize(datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
 
         r = requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
                           headers=auth_headers,
-                          data=json.dumps(
-                              {'name': new_round['name'], 'description': new_round['description'],
-                               'submissionsDue': submission_due_date.isoformat(), 'votesDue': vote_due_date.isoformat()}))
-        app.logger.info('Successful post to API server', extra={'resp': r.json()})
+                          data=json.dumps({
+                              'name': new_round['name'],
+                              'description': new_round['description'],
+                              'submissionsDue': submission_due_date.isoformat(),
+                              'votesDue': vote_due_date.isoformat()}))
 
     return league_id, httplib.OK
 
@@ -177,6 +174,24 @@ def get_manage_league(league_id):
 
     return {'user': g.user,
             'league': league}
+
+
+@app.route(MANAGE_LEAGUE_URL_V2, methods=['POST'])
+@login_required
+def post_manage_league_v2(league_id):
+    auth_headers = {'Authorization': 'Bearer ' + g.access_token}
+    api_domain = getenv('API_DOMAIN')
+
+    try:
+        r = requests.get('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers)
+        league = json.loads(r.json())
+        league['name'] = request.form.get('league-name')
+        requests.put('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers, data=json.dumps(league))
+        return redirect(url_for('view_league', league_id=league_id))
+    except Exception as e:
+        app.logger.exception('Failed to update league', exc_info=e,
+                             extra={'league': league_id, 'status': r.status_code})
+        return '', 500
 
 
 @app.route(MANAGE_LEAGUE_URL, methods=['POST'])
