@@ -338,7 +338,7 @@
                             <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
                             <div class="visible-xs" style="padding: 5px 0"></div>
                         </div><div class="text-center-xs">
-                            <span class="status-text" v-bind:class="{complete: round.status === 20, current: round.status === 10}">[[ getTimestamp(round) ]]</span>
+                            <span class="status-text" v-bind:class="{complete: round.status === 20, current: round.status === 10}">[[ getTimestamp(index > 0 ? rounds[index-1] : null, round) ]]</span>
                         </div>
                     </div>
                 </div>
@@ -430,13 +430,15 @@
                 });
         },
         methods: {
-            getTimestamp: function(round) {
+            getTimestamp: function(previousRound, round) {
                 if (round.status === 20)
                     return moment(round.votesDue).calendar(null, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'});
                 else if (round.status === 10)
                     return moment(round.votesDue).calendar(null, {sameDay: '[Votes due today at] hA', sameElse: '[Votes due on] MM.DD.YY [at] hA'});
-                else
+                else if (previousRound == null || previousRound.status === 20)
                     return moment(round.submissionsDue).calendar(null, {sameDay: '[Submissions due at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'});
+                else
+                    return moment(previousRound.votesDue).calendar(null, {sameDay: '[Live today at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'});
             }
         }
     });
