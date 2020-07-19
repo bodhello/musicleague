@@ -1,12 +1,8 @@
 <div class="round-bar {%if round.is_complete %}complete{% elif round.is_current %}current{% endif %}">
     <div class="container">
         <div class="row"><!--
-            {% if round.is_complete or league.has_owner(user) %}
         --><div class="col-xs-12 col-sm-2 text-center vcenter">
-            {% else %}
-        --><div class="col-xs-12 col-sm-2 text-center vcenter">
-            {% endif %}
-                <span alt="" class="round-status-icon{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}"></span>
+                <span class="round-status-icon{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}"></span>
                 <div class="visible-xs" style="padding: 10px 0"></div>
             </div><!--
         --><div class="col-xs-12 col-sm-5 vcenter">
@@ -126,11 +122,6 @@
                             <span class="action-text current">Listen to Playlist</span>
                         </a>
                     {% endif %}
-                {% else %}
-                    <!-- <a href="#" class="action-link hidden-xs" title="Future Round">
-                        <span alt="" class="action-button clock"></span>
-                        <span class="action-text">Waiting!</span>
-                    </a> -->
                 {% endif %}
             </div>
             {% endif %}
