@@ -325,7 +325,7 @@
     {% include "league/view/_round.html" %}
 {% endfor %}
 <div id="app">
-    <div v-for="(round, index) in rounds" class="round-bar" v-bind:class="{complete: round.status === 20}">
+    <div v-for="(round, index) in rounds" class="round-bar" v-bind:key="round.id" v-bind:class="{complete: round.status === 20}">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-2 text-center vcenter">
