@@ -324,7 +324,16 @@
     {% endif %}
     {% include "league/view/_round.html" %}
 {% endfor %}
-<div id="app"></div>
+<div id="app">
+    <div v-for="(round, index) in rounds" class="round-bar" v-bind:class="{complete: round.status === 20}">
+        <div class="container">
+            <div class="row">
+                <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title" v-bind:class="{complete: round.status === 20}">[[ round.name ]]</a>
+                <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -403,6 +412,7 @@
                 .get(`https://${apiDomain}/v1/leagues/${leagueId}/rounds`, {headers: {'Authorization': `Bearer ${accessToken}`}})
                 .then((response) => {
                     console.log(response.data);
+                    this.rounds = response.data;
                 }).catch((error) => {
                     console.error(error);
                 });
