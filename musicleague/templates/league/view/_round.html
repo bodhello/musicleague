@@ -2,30 +2,30 @@
     <div class="container">
         <div class="row"><!--
         --><div class="col-xs-12 col-sm-2 text-center vcenter">
-                <span class="round-status-icon{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}"></span>
+                <span class="round-status-icon"></span>
                 <div class="visible-xs" style="padding: 10px 0"></div>
             </div><!--
         --><div class="col-xs-12 col-sm-5 vcenter">
                 <div class="row">
                     <div class="text-center-xs">
                         {% if round.is_complete or league.has_owner(user) or user.is_admin %}
-                        <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}">{{ round.name }}</a>
+                        <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="round-title">{{ round.name }}</a>
                         {% else %}
-                        <span class="round-title{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}">{{ round.name }}</span>
+                        <span class="round-title">{{ round.name }}</span>
                         {% endif %}
                         <div class="visible-xs" style="padding: 5px 0"></div>
                         {% if round.description %}
-                        <span class="status-text{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}">{{ round.description }}</span>
+                        <span class="status-text">{{ round.description }}</span>
                         {% endif %}
                     </div><!--
                     --><div class="text-center-xs">
                         {% if round.is_complete %}
-                            <span class="status-text complete">{{ moment(round.vote_due_date)._render("calendar(null, {sameDay: '[Completed today at] hA', lastDay: '[Completed yesterday at] hA', lastWeek: '[Completed on] dddd [at] hA', sameElse: '[Completed on] MM.DD.YY'})") }}</span>
+                            <span class="status-text">{{ moment(round.vote_due_date)._render("calendar(null, {sameDay: '[Completed today at] hA', lastDay: '[Completed yesterday at] hA', lastWeek: '[Completed on] dddd [at] hA', sameElse: '[Completed on] MM.DD.YY'})") }}</span>
                         {% elif round.is_current %}
                             {% if round.accepting_submissions %}
-                            <span class="status-text current">{{ moment(round.submission_due_date)._render("calendar(null, {sameDay: '[Submissions due today at] hA', nextDay: '[Submissions due tomorrow at] hA', nextWeek: '[Submissions due on] dddd [at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'})") }}</span>
+                            <span class="status-text">{{ moment(round.submission_due_date)._render("calendar(null, {sameDay: '[Submissions due today at] hA', nextDay: '[Submissions due tomorrow at] hA', nextWeek: '[Submissions due on] dddd [at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'})") }}</span>
                             {% elif round.accepting_votes %}
-                            <span class="status-text current">{{ moment(round.vote_due_date)._render("calendar(null, {sameDay: '[Votes due today at] hA', nextDay: '[Votes due tomorrow at] hA', nextWeek: '[Votes due on] dddd [at] hA', sameElse: '[Votes due on] MM.DD.YY [at] hA'})") }}</span>
+                            <span class="status-text">{{ moment(round.vote_due_date)._render("calendar(null, {sameDay: '[Votes due today at] hA', nextDay: '[Votes due tomorrow at] hA', nextWeek: '[Votes due on] dddd [at] hA', sameElse: '[Votes due on] MM.DD.YY [at] hA'})") }}</span>
                             {% endif %}
                         {% else %}
                             <span class="status-text">{{ moment(prev_round.vote_due_date)._render("calendar(null, {sameDay: '[Live today at] hA', nextDay: '[Live tomorrow at] hA', nextWeek: '[Live on] dddd [at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'})") }}</span>
@@ -76,14 +76,14 @@
                         {% endif %}
                     {% elif round.accepting_votes and league.has_user(user) and round.user_submission(user) %}
                     <a href="{{ round.playlist_url }}" target="_blank" class="action-link" title="Listen to Playlist">
-                        <span alt="" class="action-button playlist current"></span>
-                        <span class="action-text current">Listen to Playlist</span>
+                        <span alt="" class="action-button playlist"></span>
+                        <span class="action-text">Listen to Playlist</span>
                     </a>
                     {% endif %}
                 {% elif round.is_complete %}
                     <a href="{{ round.playlist_url }}" target="_blank" class="action-link" title="Listen to Playlist">
-                        <span alt="" class="action-button playlist complete"></span>
-                        <span class="action-text complete">Listen to Playlist</span>
+                        <span alt="" class="action-button playlist"></span>
+                        <span class="action-text">Listen to Playlist</span>
                     </a>
                 {% endif %}
             </div><!--
@@ -91,35 +91,35 @@
                 {% if round.is_complete %}
                     <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="action-link" title="Round Results">
                         <span alt="" class="action-button results"></span>
-                        <span class="action-text complete">Round Results</span>
+                        <span class="action-text">Round Results</span>
                     </a>
                 {% elif round.is_current %}
                     {% if round.accepting_submissions and league.has_user(user) %}
                         <a href="{{ url_for('view_submit', league_id=league.id, submission_period_id=round.id) }}" class="action-link" title="Submit or Change Submission">
                             {% if round.user_submission(user) %}
                             <span alt="" class="action-button change"></span>
-                            <span class="action-text current">Change Submissions!</span>
+                            <span class="action-text">Change Submissions!</span>
                             {% else %}
                             <span alt="" class="action-button submit"></span>
-                            <span class="action-text current">Let's Do This!</span>
+                            <span class="action-text">Let's Do This!</span>
                             {% endif %}
                         </a>
                     {% elif round.accepting_votes and league.has_user(user) and round.user_submission(user) %}
                             {% if round.user_vote(user) %}
                             <a href="{{ url_for('view_submission_period', league_id=league.id, submission_period_id=round.id) }}" class="action-link" title="Round Results">
-                                <span alt="" class="action-button results current"></span>
-                                <span class="action-text current">Round Results<br/>&#40;In Progress&#41;</span>
+                                <span alt="" class="action-button results"></span>
+                                <span class="action-text">Round Results<br/>&#40;In Progress&#41;</span>
                             </a>
                             {% else %}
                             <a href="{{ url_for('view_vote', league_id=league.id, submission_period_id=round.id) }}" class="action-link" title="Submit Votes">
                                 <span alt="" class="action-button vote"></span>
-                                <span class="action-text current">Submit Votes!</span>
+                                <span class="action-text">Submit Votes!</span>
                             </a>
                             {% endif %}
                     {% elif round.accepting_votes %}
                         <a href="{{ round.playlist_url }}" target="_blank" class="action-link" title="Listen to Playlist">
-                            <span alt="" class="action-button playlist current"></span>
-                            <span class="action-text current">Listen to Playlist</span>
+                            <span alt="" class="action-button playlist"></span>
+                            <span class="action-text">Listen to Playlist</span>
                         </a>
                     {% endif %}
                 {% endif %}
