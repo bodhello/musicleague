@@ -140,7 +140,7 @@
     margin-bottom: 25px;
 }
 #status-bar .round-bar { background: none; padding: 0; }
-#status-bar .round-bar .round-status-icon.current { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/swords_white.svg"); background-repeat: no-repeat; }
+#status-bar .round-bar.current .round-status-icon { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/swords_white.svg"); background-repeat: no-repeat; }
 #status-bar .round-bar .round-title { color: #fff; }
 #status-bar .round-bar .status-text { color: #fff; margin: 15px 0px; }
 
@@ -172,8 +172,8 @@
     margin: 0px;
     width: 90px;
 }
-.round-bar .round-status-icon.complete { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/completed_league_icon.svg") }
-.round-bar .round-status-icon.current {
+.round-bar.complete .round-status-icon { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/completed_league_icon.svg") }
+.round-bar.current .round-status-icon {
     background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/live_league_icon.svg");
     width: 86px;
 }
@@ -186,8 +186,8 @@
     line-height: 29px;
     vertical-align: top;
 }
-.round-bar .round-title.current { color: #02B8EF; }
-.round-bar .round-title.complete { color: #00259A; }
+.round-bar.current .round-title { color: #02B8EF; }
+.round-bar.complete .round-title { color: #00259A; }
 
 .round-bar .status-text {
     color: #c0c0c0;
@@ -196,8 +196,8 @@
     line-height: 19px;
     margin: 10px 0px;
 }
-.round-bar .status-text.current { color: #02B8EF; }
-.round-bar .status-text.complete { color: #00259A; }
+.round-bar.current .status-text { color: #02B8EF; }
+.round-bar.complete .status-text { color: #00259A; }
 
 .round-bar .action-progress { display: none; }
 .round-bar .action-progress a:hover,
@@ -249,9 +249,9 @@
 }
 .round-bar .action-link .action-button.change { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/change_lightblue.svg"); background-repeat: no-repeat; }
 .round-bar .action-link .action-button.playlist { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/playlist_icon_blue.svg"); background-repeat: no-repeat; }
-.round-bar .action-link .action-button.playlist.current { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/playlist_icon_lightblue.svg"); background-repeat: no-repeat; }
+.round-bar.current .action-link .action-button.playlist { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/playlist_icon_lightblue.svg"); background-repeat: no-repeat; }
 .round-bar .action-link .action-button.results { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/results_icon.svg"); background-repeat: no-repeat; }
-.round-bar .action-link .action-button.results.current { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/results_icon_lightblue.svg"); background-repeat: no-repeat; }
+.round-bar.current .action-link .action-button.results { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/results_icon_lightblue.svg"); background-repeat: no-repeat; }
 .round-bar .action-link .action-button.submit { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/submit_lightblue.svg"); background-repeat: no-repeat; width: 79px; }
 .round-bar .action-link .action-button.vote { background: url("https://s3.amazonaws.com/musicleague-static-assets/icons/vote_lightblue.svg"); background-repeat: no-repeat; }
 
@@ -263,8 +263,8 @@
     line-height: 17px;
     margin: 0 5px;
 }
-.round-bar .action-link .action-text.current { color: #02B8EF; }
-.round-bar .action-link .action-text.complete { color: #00259A; }
+.round-bar.current .action-link .action-text { color: #02B8EF; }
+.round-bar.complete .action-link .action-text { color: #00259A; }
 
 .round-bar.current .right-action { border-left: 3px solid #02B8EF; padding: 10px 0; }
 .round-bar.complete .right-action { border-left: 3px solid #01249A; padding: 10px 0; }
