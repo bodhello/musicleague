@@ -338,8 +338,7 @@
                             <span v-if="round.description.length > 0" class="status-text" v-bind:class="{complete: round.status === 20}">[[ round.description ]]</span>
                             <div class="visible-xs" style="padding: 5px 0"></div>
                         </div><div class="text-center-xs">
-                            <span v-if="round.status === 20" class="status-text complete">[[ getTimestamp(round.votesDue, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'}) ]]</span>
-                            <span v-else class="status-text">[[ getTimestamp(round.submissionsDue, {sameDay: '[Submissions due today at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'}) ]]</span>
+                            <span class="status-text" v-bind:class="{complete: round.status === 20, current: round.status === 10}">[[ getTimestamp(round) ]]</span>
                         </div>
                     </div>
                 </div>
@@ -431,8 +430,13 @@
                 });
         },
         methods: {
-            getTimestamp: function(ts, cal) {
-                return moment(ts).calendar(null, cal);
+            getTimestamp: function(round) {
+                if (round.status === 20)
+                    return moment(round.votesDue).calendar(null, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'});
+                else if (round.status === 10)
+                    return moment(round.votesDue).calendar(null, {sameDay: '[Votes due today at] hA', sameElse: '[Votes due on] MM.DD.YY [at] hA'});
+                else
+                    return moment(round.submissionsDue).calendar(null, {sameDay: '[Submissions due at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'});
             }
         }
     });
