@@ -339,7 +339,7 @@
                             <div class="visible-xs" style="padding: 5px 0"></div>
                         </div><div class="text-center-xs">
                             <span v-if="round.status === 20" class="status-text complete">[[ getTimestamp(round.votesDue, {sameDay: '[Completed today at] hA', sameElse: '[Completed on] MM.DD.YY'}) ]]</span>
-                            <span v-else class="status-text">[[ getTimestamp(rounds[index-1].votesDue, {sameDay: '[Live today at] hA', sameElse: '[Live on] MM.DD.YY [at] hA'}) ]]</span>
+                            <span v-else class="status-text">[[ getTimestamp(round.submissionsDue, {sameDay: '[Submissions due today at] hA', sameElse: '[Submissions due on] MM.DD.YY [at] hA'}) ]]</span>
                         </div>
                     </div>
                 </div>
