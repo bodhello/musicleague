@@ -1,15 +1,11 @@
 <div class="round-bar {%if round.is_complete %}complete{% elif round.is_current %}current{% endif %}">
     <div class="container">
-        <div class="row"><!--
-            {% if round.is_complete or league.has_owner(user) %}
-        --><div class="col-xs-12 col-sm-2 text-center vcenter">
-            {% else %}
-        --><div class="col-xs-12 col-sm-2 text-center vcenter">
-            {% endif %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-2 text-center vcenter">
                 <span alt="" class="round-status-icon{% if round.is_complete %} complete{% elif  round.is_current %} current{% endif %}"></span>
                 <div class="visible-xs" style="padding: 10px 0"></div>
-            </div><!--
-        --><div class="col-xs-12 col-sm-5 vcenter">
+            </div>
+            <div class="col-xs-12 col-sm-5 vcenter">
                 <div class="row">
                     <div class="text-center-xs">
                         {% if round.is_complete or league.has_owner(user) or user.is_admin %}
