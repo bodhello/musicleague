@@ -92,13 +92,13 @@ def post_create_league_v2():
         vote_due_date_str = new_round['voting-due-date-utc']
         vote_due_date = utc.localize(datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
 
-        r = requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
-                          headers=auth_headers,
-                          data=json.dumps({
-                              'name': new_round['name'],
-                              'description': new_round['description'],
-                              'submissionsDue': submission_due_date.isoformat(),
-                              'votesDue': vote_due_date.isoformat()}))
+        requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
+                      headers=auth_headers,
+                      data=json.dumps({
+                          'name': new_round['name'],
+                          'description': new_round['description'],
+                          'submissionsDue': submission_due_date.isoformat(),
+                          'votesDue': vote_due_date.isoformat()}))
 
     user_ids = json.loads(request.form.get('added-members', '[]'))
     for user_id in [g.user.id] + user_ids:
