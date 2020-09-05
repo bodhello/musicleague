@@ -21,8 +21,8 @@ def get_botify(bot_id=None):
     if not bot:
         return None, None
 
-    # If access_expired, refresh it
-    if bot.expires_at < int(time()):
+    # If the token has expired or will expire very soon, refresh it
+    if bot.expires_at < (int(time()) + 10):
         app.logger.debug('Bot %s access expired. Refreshing.', bot_id)
         oauth = get_spotify_oauth()
         token_info = oauth.refresh_access_token(bot.refresh_token)
