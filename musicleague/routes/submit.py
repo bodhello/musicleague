@@ -61,6 +61,11 @@ def view_submit_2(league_id, submission_period_id):
 @login_required
 def view_submit(league_id, submission_period_id):
     league = select_league(league_id)
+    if league.version == 2:
+        return redirect(
+            url_for(
+                'view_submit_2', league_id=league_id, submission_period_id=submission_period_id))
+
     submission_period = next((sp for sp in league.submission_periods
                               if sp.id == submission_period_id), None)
     if not league.has_user(g.user):
