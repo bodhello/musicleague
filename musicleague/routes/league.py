@@ -86,19 +86,8 @@ def post_create_league_v2():
 
     rounds = json.loads(request.form.get('added-rounds', []))
     for new_round in rounds:
-        submission_due_date_str = new_round['submission-due-date-utc']
-        submission_due_date = utc.localize(datetime.strptime(submission_due_date_str, '%m/%d/%y %I%p'))
-
-        vote_due_date_str = new_round['voting-due-date-utc']
-        vote_due_date = utc.localize(datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
-
         requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
-                      headers=auth_headers,
-                      data=json.dumps({
-                          'name': new_round['name'],
-                          'description': new_round['description'],
-                          'submissionsDue': submission_due_date.isoformat(),
-                          'votesDue': vote_due_date.isoformat()}))
+                      headers=auth_headers, data=payload_from_round(new_round))
 
     user_ids = json.loads(request.form.get('added-members', '[]'))
     for user_id in [g.user.id] + user_ids:
@@ -201,11 +190,40 @@ def post_manage_league_v2(league_id):
         league = r.json()
         league['name'] = request.form.get('league-name')
         requests.put('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers, data=json.dumps(league))
+
+        new_rounds = json.loads(request.form.get('added-rounds', []))
+        for new_round in new_rounds:
+            requests.post('https://{}/v1/leagues/{}/rounds'.format(api_domain, league_id),
+                          headers=auth_headers, data=payload_from_round(new_round))
+
+        edited_rounds = json.loads(request.form.get('edited-rounds', []))
+        for edited_round in edited_rounds:
+            requests.put('https://{}/v1/leagues/{}/rounds/{}'.format(api_domain, league_id, edited_round['id']),
+                         headers=auth_headers, data=payload_from_round(edited_round))
+
+        deleted_rounds = json.loads(request.form.get('deleted-rounds', []))
+        for deleted_round in deleted_rounds:
+            requests.delete('https://{}/v1/leagues/{}/rounds/{}'.format(api_domain, league_id, deleted_round['id']))
+
         return redirect(url_for('view_league', league_id=league_id))
     except Exception as e:
         app.logger.exception('Failed to update league', exc_info=e,
                              extra={'league': league_id, 'status': r.status_code})
         return '', 500
+
+
+def payload_from_round(r):
+    submission_due_date_str = r['submission-due-date-utc']
+    submission_due_date = utc.localize(datetime.strptime(submission_due_date_str, '%m/%d/%y %I%p'))
+
+    vote_due_date_str = r['voting-due-date-utc']
+    vote_due_date = utc.localize(datetime.strptime(vote_due_date_str, '%m/%d/%y %I%p'))
+
+    return json.dumps({
+        'name': r['name'],
+        'description': r['description'],
+        'submissionsDue': submission_due_date.isoformat(),
+        'votesDue': vote_due_date.isoformat()})
 
 
 @app.route(MANAGE_LEAGUE_URL, methods=['POST'])
