@@ -203,7 +203,7 @@ def post_manage_league_v2(league_id):
 
         deleted_rounds = json.loads(request.form.get('deleted-rounds', []))
         for deleted_round in deleted_rounds:
-            requests.delete('https://{}/v1/leagues/{}/rounds/{}'.format(api_domain, league_id, deleted_round['id']))
+            requests.delete('https://{}/v1/leagues/{}/rounds/{}'.format(api_domain, league_id, deleted_round))
 
         return redirect(url_for('view_league', league_id=league_id))
     except Exception as e:
