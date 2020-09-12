@@ -198,7 +198,7 @@ def post_manage_league_v2(league_id):
 
     try:
         r = requests.get('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers)
-        league = json.loads(r.json())
+        league = r.json()
         league['name'] = request.form.get('league-name')
         requests.put('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers, data=json.dumps(league))
         return redirect(url_for('view_league', league_id=league_id))
