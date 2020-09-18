@@ -1,6 +1,8 @@
 from collections import OrderedDict
 import httplib
 import json
+from os import getenv
+import requests
 
 from flask import g
 from flask import redirect
@@ -23,6 +25,7 @@ from musicleague.vote import get_my_vote
 
 
 VOTE_URL = '/l/<league_id>/<submission_period_id>/vote/'
+VOTE_URL_V2 = VOTE_URL + '2/'
 
 
 @app.route(VOTE_URL, methods=['GET'])
@@ -79,11 +82,53 @@ def view_vote(league_id, submission_period_id):
     }
 
 
+@app.route(VOTE_URL_V2, methods=['POST'])
+@login_required
+def vote_v2(league_id, submission_period_id):
+
+    try:
+        votes = json.loads(request.form.get('votes'))
+        comments = json.loads(request.form.get('comments'))
+
+        # Remove all unnecessary zero-values
+        votes = {k: v for k, v in votes.iteritems() if v}
+        comments = {k: v for k, v in comments.iteritems() if v}
+
+        uris = set(votes.keys() + comments.keys())
+
+        auth_headers = {'Authorization': 'Bearer ' + g.access_token}
+        api_domain = getenv('API_DOMAIN')
+
+        vote_objects = [
+            {
+                'comment': comments.get(uri, ''),
+                'spotifyUri': uri,
+                'weight': votes.get(uri, 0)
+            }
+            for uri in uris
+        ]
+
+        requests.put('https://{}/v1/leagues/{}/rounds/{}/votes/{}'.format(
+                        api_domain, league_id, submission_period_id, g.user.id),
+                     headers=auth_headers, data=json.dumps({'votes': vote_objects}))
+
+    except Exception:
+        app.logger.exception(
+            'Failed to process votes',
+            extra={'user': g.user.id, 'league': league_id, 'round': submission_period_id})
+
+    return redirect(url_for('view_submission_period', league_id=league_id,
+                            submission_period_id=submission_period_id))
+
+
 @app.route(VOTE_URL, methods=['POST'])
 @login_required
 def vote(league_id, submission_period_id):
     try:
         league = select_league(league_id)
+        if league.version == 2:
+            return redirect(url_for('vote_v2', league_id=league_id, submission_period_id=submission_period_id))
+
         submission_period = next((sp for sp in league.submission_periods
                                   if sp.id == submission_period_id), None)
 
@@ -147,4 +192,4 @@ def vote(league_id, submission_period_id):
     except Exception:
         app.logger.exception(
             'Failed to process votes',
-            extra={'user': g.user.id, 'league': league.id, 'round': submission_period_id})
+            extra={'user': g.user.id, 'league': league_id, 'round': submission_period_id})
