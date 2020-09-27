@@ -127,7 +127,9 @@ def vote(league_id, submission_period_id):
     try:
         league = select_league(league_id)
         if league.version == 2:
-            return redirect(url_for('vote_v2', league_id=league_id, submission_period_id=submission_period_id))
+            return redirect(
+                url_for('vote_v2', league_id=league_id, submission_period_id=submission_period_id),
+                code=httplib.TEMPORARY_REDIRECT)
 
         submission_period = next((sp for sp in league.submission_periods
                                   if sp.id == submission_period_id), None)
