@@ -72,6 +72,10 @@ def post_create_league_v2():
 
     league_id = r.json()['id']
 
+    max_upvotes_per_song = 0
+    if request.form.get('limit-downvotes') == 'yes':
+        max_upvotes_per_song = request.form.get('max-points-per-song', default=0, type=int)
+
     downvote_bank_size, max_downvotes_per_song = 0, 0
     if request.form.get('allow-downvotes') == 'yes':
         downvote_bank_size = request.form.get('downvote-bank-size', default=0, type=int)
@@ -83,7 +87,7 @@ def post_create_league_v2():
                      'id': league_id,
                      'trackCount': request.form.get('tracks-submitted', default=0, type=int),
                      'upvoteBankSize': request.form.get('point-bank-size', default=0, type=int),
-                     'maxUpvotesPerSong': request.form.get('max-points-per-song', default=0, type=int),
+                     'maxUpvotesPerSong': max_upvotes_per_song,
                      'downvoteBankSize': downvote_bank_size,
                      'maxDownvotesPerSong': max_downvotes_per_song,
                      'submissionReminderDelta': 24,
@@ -195,6 +199,27 @@ def post_manage_league_v2(league_id):
         league = r.json()
         league['name'] = request.form.get('league-name')
         requests.put('https://{}/v1/leagues/{}'.format(api_domain, league_id), headers=auth_headers, data=json.dumps(league))
+
+        max_upvotes_per_song = 0
+        if request.form.get('limit-downvotes') == 'yes':
+            max_upvotes_per_song = request.form.get('max-points-per-song', default=0, type=int)
+
+        downvote_bank_size, max_downvotes_per_song = 0, 0
+        if request.form.get('allow-downvotes') == 'yes':
+            downvote_bank_size = request.form.get('downvote-bank-size', default=0, type=int)
+            max_downvotes_per_song = request.form.get('max-downvotes-per-song', default=0, type=int)
+
+        requests.put('https://{}/v1/leagues/{}/preferences'.format(api_domain, league_id),
+                     headers=auth_headers,
+                     data=json.dumps({
+                         'id': league_id,
+                         'trackCount': request.form.get('tracks-submitted', default=0, type=int),
+                         'upvoteBankSize': request.form.get('point-bank-size', default=0, type=int),
+                         'maxUpvotesPerSong': max_upvotes_per_song,
+                         'downvoteBankSize': downvote_bank_size,
+                         'maxDownvotesPerSong': max_downvotes_per_song,
+                         'submissionReminderDelta': 24,
+                         'voteReminderDelta': 24}))
 
         new_rounds = json.loads(request.form.get('added-rounds', []))
         for new_round in new_rounds:
