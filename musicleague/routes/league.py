@@ -72,6 +72,11 @@ def post_create_league_v2():
 
     league_id = r.json()['id']
 
+    downvote_bank_size, max_downvotes_per_song = 0, 0
+    if request.form.get('allow-downvotes') == 'yes':
+        downvote_bank_size = request.form.get('downvote-bank-size', default=0, type=int)
+        max_downvotes_per_song = request.form.get('max-downvotes-per-song', default=0, type=int)
+
     requests.put('https://{}/v1/leagues/{}/preferences'.format(api_domain, league_id),
                  headers=auth_headers,
                  data=json.dumps({
@@ -79,8 +84,8 @@ def post_create_league_v2():
                      'trackCount': request.form.get('tracks-submitted', default=0, type=int),
                      'upvoteBankSize': request.form.get('point-bank-size', default=0, type=int),
                      'maxUpvotesPerSong': request.form.get('max-points-per-song', default=0, type=int),
-                     'downvoteBankSize': request.form.get('downvote-bank-size', default=0, type=int),
-                     'maxDownvotesPerSong': request.form.get('max-downvotes-per-song', default=0, type=int),
+                     'downvoteBankSize': downvote_bank_size,
+                     'maxDownvotesPerSong': max_downvotes_per_song,
                      'submissionReminderDelta': 24,
                      'voteReminderDelta': 24}))
 
