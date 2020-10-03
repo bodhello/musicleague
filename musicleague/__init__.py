@@ -9,7 +9,6 @@ from redis import Redis
 from rq import Queue
 from rq_scheduler import Scheduler
 
-from musicleague.analytics import NoopMixpanel
 from musicleague.environment import get_redis_url
 from musicleague.environment import get_secret_key
 from musicleague.environment import get_server_name

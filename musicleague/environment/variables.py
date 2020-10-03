@@ -9,7 +9,6 @@ DATABASE_URL = EnvironmentVariable(key='DATABASE_URL', default='')
 DEBUG = EnvironmentVariable(key='DEBUG', default=False)
 DEPLOYED = EnvironmentVariable(key='ON_HEROKU', default=False)
 EVENTSTORE_HOST = EnvironmentVariable(key='EVENTSTORE_HOST', default='')
-MIXPANEL_TOKEN = EnvironmentVariable(key='MIXPANEL_TOKEN', default='')
 NOTIFICATION_SENDER = EnvironmentVariable(key="NOTIFICATION_SENDER", default='')  # noqa
 PORT = EnvironmentVariable(key='PORT', default=5000)
 PRODUCTION = EnvironmentVariable(key='IS_PRODUCTION', default=False)
