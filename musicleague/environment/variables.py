@@ -9,9 +9,6 @@ DATABASE_URL = EnvironmentVariable(key='DATABASE_URL', default='')
 DEBUG = EnvironmentVariable(key='DEBUG', default=False)
 DEPLOYED = EnvironmentVariable(key='ON_HEROKU', default=False)
 EVENTSTORE_HOST = EnvironmentVariable(key='EVENTSTORE_HOST', default='')
-LOGENTRIES_TOKEN = EnvironmentVariable(key='LOGENTRIES_TOKEN', default='')
-MESSENGER_PAGE_ACCESS_TOKEN = EnvironmentVariable(key='MESSENGER_PAGE_ACCESS_TOKEN', default='')  # noqa
-MESSENGER_VERIFY_TOKEN = EnvironmentVariable(key='MESSENGER_VERIFY_TOKEN', default='')  # noqa
 MIXPANEL_TOKEN = EnvironmentVariable(key='MIXPANEL_TOKEN', default='')
 NOTIFICATION_SENDER = EnvironmentVariable(key="NOTIFICATION_SENDER", default='')  # noqa
 PORT = EnvironmentVariable(key='PORT', default=5000)

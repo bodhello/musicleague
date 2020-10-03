@@ -21,8 +21,6 @@ from musicleague.routes.auth import logout
 from musicleague.routes.decorators import templated
 from musicleague.routes.league import get_create_league
 from musicleague.routes.league import view_league
-from musicleague.routes.messenger import verify
-from musicleague.routes.messenger import webhook
 from musicleague.routes.spotify import create_spotify_playlist
 from musicleague.routes.spotify import view_playlist
 from musicleague.routes.submission_period import post_create_submission_period

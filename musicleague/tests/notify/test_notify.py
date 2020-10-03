@@ -61,13 +61,11 @@ class OwnerUserSubmittedNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'owner_user_submitted_email')
-    @patch(PATCH_PATH + 'owner_user_submitted_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = owner_user_submitted_notification(self.submission)
 
         self.assertTrue(sent)
         email.assert_called_once_with(self.owner, self.submission)
-        messenger.assert_called_once_with(self.owner, self.submission)
 
 
 class OwnerUserVotedNotificationTestCase(unittest.TestCase):
@@ -109,13 +107,11 @@ class OwnerUserVotedNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'owner_user_voted_email')
-    @patch(PATCH_PATH + 'owner_user_voted_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = owner_user_voted_notification(self.vote)
 
         self.assertTrue(sent)
         email.assert_called_once_with(self.owner, self.vote)
-        messenger.assert_called_once_with(self.owner, self.vote)
 
 
 class UserAddedToLeagueNotificationTestCase(unittest.TestCase):
@@ -144,12 +140,10 @@ class UserAddedToLeagueNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_added_to_league_email')
-    @patch(PATCH_PATH + 'user_added_to_league_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_added_to_league_notification(self.user, self.league)
 
         self.assertTrue(sent)
-        messenger.assert_called_once_with(self.user, self.league)
         email.assert_called_once_with(self.user, self.league)
 
 
@@ -204,8 +198,7 @@ class UserLastToSubmitNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_last_to_submit_email')
-    @patch(PATCH_PATH + 'user_last_to_submit_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_last_to_submit_notification(
             self.user, self.submission_period)
 
@@ -234,8 +227,7 @@ class UserLastToVoteNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_last_to_vote_email')
-    @patch(PATCH_PATH + 'user_last_to_vote_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_last_to_vote_notification(
             self.user, self.submission_period)
 
@@ -266,8 +258,7 @@ class UserPlaylistCreatedNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_playlist_created_email')
-    @patch(PATCH_PATH + 'user_playlist_created_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_playlist_created_notification(self.submission_period)
 
         self.assertTrue(sent)
@@ -303,8 +294,7 @@ class UserSubmitReminderNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_submit_reminder_email')
-    @patch(PATCH_PATH + 'user_submit_reminder_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_submit_reminder_notification(
             self.user, self.submission_period)
 
@@ -341,8 +331,7 @@ class UserVoteReminderNotificationTestCase(unittest.TestCase):
         self.assertFalse(sent)
 
     @patch(PATCH_PATH + 'user_vote_reminder_email')
-    @patch(PATCH_PATH + 'user_vote_reminder_messenger')
-    def test_send(self, messenger, email):
+    def test_send(self, email):
         sent = user_vote_reminder_notification(
             self.user, self.submission_period)
 
