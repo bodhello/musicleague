@@ -13,9 +13,6 @@ from flask import request
 from flask import url_for
 
 from musicleague import app
-from musicleague.analytics import track_user_created_league
-from musicleague.analytics import track_user_deleted_league
-from musicleague.analytics import track_user_joined_league
 from musicleague.league import add_user
 from musicleague.league import create_league
 from musicleague.league import remove_league
@@ -157,7 +154,6 @@ def post_create_league():
             league, new_round['name'], new_round['description'],
             submission_due_date, vote_due_date)
 
-    track_user_created_league(g.user.id, league)
     app.logger.info('User created league', extra={'league': league.id, 'user': g.user.id})
 
     return redirect(url_for('view_league', league_id=league.id))
@@ -374,7 +370,6 @@ def join_league(league_id):
             'Deleted league invitation',
             extra={'league': league_id, 'user': g.user.id, 'invitation': invite_id})
 
-    track_user_joined_league(g.user.id, league)
     app.logger.info('User joined league', extra={'league': league_id, 'user': g.user.id, 'invitation': invite_id})
 
     return redirect(url_for('view_league', league_id=league_id))
@@ -386,7 +381,6 @@ def post_remove_league(league_id):
     league = select_league(league_id)
     if league and league.has_owner(g.user):
         remove_league(league_id, league=league)
-        track_user_deleted_league(g.user.id, league)
         app.logger.debug('User deleted league', extra={'league': league.id, 'user': g.user.id})
 
     return redirect(url_for('profile'))

@@ -10,12 +10,6 @@ from flask import session
 from flask import url_for
 
 from musicleague import app
-from musicleague.analytics import track_user_proceeded_duplicate_artist
-from musicleague.analytics import track_user_proceeded_repeat_submission
-from musicleague.analytics import track_user_submitted
-from musicleague.analytics import track_user_submitted_duplicate_artist
-from musicleague.analytics import track_user_submitted_duplicate_song
-from musicleague.analytics import track_user_submitted_repeat_submission
 from musicleague.notify import owner_user_submitted_notification
 from musicleague.notify import user_last_to_submit_notification
 from musicleague.persistence.select import select_league
@@ -151,23 +145,12 @@ def submit(league_id, submission_period_id):
         proceeding_dups = set(warned_artists).intersection(set(duplicate_artists))
         if proceeding_dups:
             duplicate_artists = list(set(duplicate_artists) - set(warned_artists))
-            track_user_proceeded_duplicate_artist(g.user.id, submission_period, list(proceeding_dups))
 
         proceeding_repeats = set(warned_repeats).intersection(set(repeat_submissions))
         if proceeding_repeats:
             repeat_submissions = list(set(repeat_submissions) - set(warned_repeats))
-            track_user_proceeded_repeat_submission(g.user.id, submission_period, list(proceeding_repeats))
 
         if duplicate_tracks or duplicate_artists or repeat_submissions:
-
-            if duplicate_tracks:
-                track_user_submitted_duplicate_song(g.user.id, submission_period, duplicate_tracks)
-            # elif duplicate_albums:
-            #     track_user_submitted_duplicate_album(g.user.id, submission_period, duplicate_albums)
-            elif duplicate_artists:
-                track_user_submitted_duplicate_artist(g.user.id, submission_period, duplicate_artists)
-            elif repeat_submissions:
-                track_user_submitted_repeat_submission(g.user.id, submission_period, repeat_submissions)
 
             return render_template(
                 'submit/page.html',
@@ -204,8 +187,6 @@ def submit(league_id, submission_period_id):
         elif submission.count < 2 and len(remaining) == 1:
             last_user = remaining[0]
             user_last_to_submit_notification(last_user, submission_period)
-
-        track_user_submitted(g.user.id, submission_period)
 
         return redirect(url_for('view_league', league_id=league_id))
 
