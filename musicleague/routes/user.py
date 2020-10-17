@@ -1,5 +1,6 @@
 import json
 from os import getenv
+import requests
 
 from flask import g
 from flask import redirect
@@ -29,17 +30,12 @@ VIEW_USER_URL = '/user/<user_id>/'
 @app.route(AUTOCOMPLETE, methods=['POST'])
 @login_required
 def autocomplete():
-    results = []
-    term = request.form.get('query')
-    stmt = 'SELECT name, id FROM users WHERE name ILIKE %s OR name ILIKE %s ORDER BY 1 LIMIT 10'
-    with get_postgres_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute(stmt, ('%' + term, '%' + term + '%'))
-            for user_tup in cur.fetchall():
-                name, id = user_tup
-                if id != g.user.id:
-                    results.append({'label': name, 'id': id})
-    return json.dumps(results)
+    auth_headers = {'Authorization': 'Bearer ' + g.access_token}
+    api_domain = getenv('API_DOMAIN')
+    response = requests.post(
+        'https://{}/v1/users/autocomplete?query={}'.format(api_domain, request.form.get('query')),
+        headers=auth_headers)
+    return response.text, response.status_code
 
 
 @app.route(PROFILE_URL)
